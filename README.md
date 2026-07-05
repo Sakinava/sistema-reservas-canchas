@@ -15,7 +15,6 @@ Este proyecto consiste en un sistema web para la gestión de reservas de canchas
 ## Integrantes
 - Ashley Rojas Araya
 - Isaac Navarro Mora
-- Gamaliel Cerda Román
 - Stephanie Hernández Morales
 ## Prototipo en Figma
 
