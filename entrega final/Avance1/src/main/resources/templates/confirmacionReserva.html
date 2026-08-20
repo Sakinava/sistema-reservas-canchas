@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PadelApp - Confirmación de Reserva</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #dbe7f5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding-top: 40px;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+
+        .app-title {
+            color: #1d4e89;
+            font-weight: 700;
+            font-size: 1.8rem;
+            margin-bottom: 0;
+        }
+
+        .app-subtitle {
+            color: #6c757d;
+            font-size: 0.85rem;
+            margin-bottom: 30px;
+        }
+
+        .confirm-card {
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 25px 30px;
+            width: 100%;
+            max-width: 300px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+            text-align: center;
+        }
+
+        .check-icon {
+            background-color: #2f9e52;
+            color: #fff;
+            width: 40px;
+            height: 40px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            margin: 0 auto 12px auto;
+        }
+
+        .confirm-title {
+            color: #2f9e52;
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 18px;
+        }
+
+        .info-box {
+            background-color: #e9f2fb;
+            border-radius: 8px;
+            padding: 14px 16px;
+            text-align: left;
+            margin-bottom: 15px;
+        }
+
+        .info-box p {
+            font-size: 0.78rem;
+            color: #1d4e89;
+            margin-bottom: 6px;
+        }
+
+        .info-box p:last-child {
+            margin-bottom: 0;
+        }
+
+        .info-box strong {
+            color: #212529;
+        }
+
+        .badge-confirmada {
+            background-color: #d1f2dd;
+            color: #1e7e42;
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 12px;
+        }
+
+        .email-note {
+            font-size: 0.68rem;
+            color: #6c757d;
+            font-style: italic;
+            margin-bottom: 18px;
+            line-height: 1.4;
+        }
+
+        .btn-inicio {
+            background-color: #1d6fa8;
+            border: none;
+            color: #fff;
+            font-weight: 600;
+            font-size: 0.85rem;
+            width: 100%;
+            padding: 8px 0;
+        }
+
+        .btn-inicio:hover {
+            background-color: #175a87;
+            color: #fff;
+        }
+
+        .footer-note {
+            font-size: 0.7rem;
+            color: #9aa5b1;
+            margin-top: 15px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <h1 class="app-title">🎾 PadelApp</h1>
+    <p class="app-subtitle">Sistema de Reservas de Canchas de Pádel</p>
+
+    <div class="confirm-card">
+        <div class="check-icon">✔</div>
+        <p class="confirm-title">¡Reserva realizada con éxito!</p>
+
+        <div class="info-box">
+            <p><strong>N.° de reserva:</strong> <span id="numeroReserva" th:text="${numeroReserva} ?: '#RES-0067'">#RES-0067</span></p>
+            <p><strong>Usuario:</strong> <span id="usuario" th:text="${usuario} ?: 'juan123'">juan123</span></p>
+            <p><strong>Cancha:</strong> <span id="cancha" th:text="${cancha} ?: 'Cancha 1 – Techada'">Cancha 1 – Techada</span></p>
+            <p><strong>Fecha:</strong> <span id="fecha" th:text="${fecha} ?: '12/06/2026'">12/06/2026</span></p>
+            <p><strong>Hora:</strong> <span id="hora" th:text="${hora} ?: '18:00 – 19:00'">18:00 – 19:00</span></p>
+            <p><strong>Jugadores:</strong> <span id="jugadores" th:text="${jugadores} ?: '2 jugadores'">2 jugadores</span></p>
+            <p><strong>Estado:</strong> <span class="badge-confirmada">Confirmada</span></p>
+        </div>
+
+        <p class="email-note">
+            Se enviará una confirmación al correo registrado<br>
+            (simulado – no hay correo real en este prototipo)
+        </p>
+
+        <a th:href="@{/menu}" href="menu.html" class="btn btn-inicio">Volver al inicio</a>
+    </div>
+
+    <p class="footer-note">Prototipo académico – No hay base de datos ni backend real</p>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Lee los datos enviados desde reserva.html (cancha, fecha, hora, jugadores)
+        // y los muestra dinámicamente en la confirmación
+        const params = new URLSearchParams(window.location.search);
+
+        const cancha = params.get('cancha');
+        const fecha = params.get('fecha');
+        const hora = params.get('hora');
+        const jugadores = params.get('jugadores');
+
+        if (cancha) {
+            document.getElementById('cancha').textContent = cancha;
+        }
+
+        if (fecha) {
+            // Convierte de yyyy-mm-dd (input date) a dd/mm/yyyy
+            const partes = fecha.split('-');
+            if (partes.length === 3) {
+                document.getElementById('fecha').textContent = `${partes[2]}/${partes[1]}/${partes[0]}`;
+            }
+        }
+
+        if (hora) {
+            // Calcula la hora de fin sumando 1 hora
+            const [h, m] = hora.split(':').map(Number);
+            const horaFin = String((h + 1) % 24).padStart(2, '0') + ':' + String(m).padStart(2, '0');
+            document.getElementById('hora').textContent = `${hora} – ${horaFin}`;
+        }
+
+        if (jugadores) {
+            document.getElementById('jugadores').textContent = `${jugadores} jugadores`;
+        }
+
+        // Genera un número de reserva aleatorio (simulado, sin backend)
+        const numeroAleatorio = Math.floor(1000 + Math.random() * 9000);
+        const numeroReserva = `#RES-${numeroAleatorio}`;
+        document.getElementById('numeroReserva').textContent = numeroReserva;
+
+        // Guarda la reserva en localStorage para que aparezca en el Panel Administrador y en Mis Reservas
+        const RESERVAS_KEY = 'padelapp_reservas';
+
+        const reservasPorDefecto = [
+            { numero: '#0042', usuario: 'juan123', cancha: 'Cancha 1', canchaCompleta: 'Cancha 1 – Techada', fecha: '12/06/2026', horaInicio: '18:00', horaFin: '19:00', jugadores: 2, estado: 'Confirmada' },
+            { numero: '#0041', usuario: 'maria99', cancha: 'Cancha 1', canchaCompleta: 'Cancha 1 – Techada', fecha: '18/06/2026', horaInicio: '10:00', horaFin: '11:00', jugadores: 4, estado: 'Confirmada' },
+            { numero: '#0040', usuario: 'carlos_p', cancha: 'Cancha 2', canchaCompleta: 'Cancha 2 – Al aire libre', fecha: '17/06/2026', horaInicio: '09:00', horaFin: '10:00', jugadores: 2, estado: 'Cancelada' },
+            { numero: '#0038', usuario: 'lopez205', cancha: 'Cancha 4', canchaCompleta: 'Cancha 4 – Lateral', fecha: '17/06/2026', horaInicio: '15:00', horaFin: '16:00', jugadores: 4, estado: 'Completada' },
+            { numero: '#0036', usuario: 'juan123', cancha: 'Cancha 1', canchaCompleta: 'Cancha 1 – Techada', fecha: '15/06/2026', horaInicio: '19:00', horaFin: '20:00', jugadores: 2, estado: 'Confirmada' }
+        ];
+
+        const guardado = localStorage.getItem(RESERVAS_KEY);
+        const reservas = guardado ? JSON.parse(guardado) : reservasPorDefecto;
+
+        // Nombre corto de la cancha para la tabla del panel (ej: "Cancha 1")
+        const canchaCorta = (cancha || 'Cancha 1').split('–')[0].trim();
+        const usuarioActual = document.getElementById('usuario').textContent || 'juan123';
+        const fechaTexto = document.getElementById('fecha').textContent;
+        const [horaInicioTexto, horaFinTexto] = document.getElementById('hora').textContent.split('–').map(s => s.trim());
+
+        reservas.unshift({
+            numero: numeroReserva,
+            usuario: usuarioActual,
+            cancha: canchaCorta,
+            canchaCompleta: cancha || 'Cancha 1 – Techada',
+            fecha: fechaTexto,
+            horaInicio: horaInicioTexto || '18:00',
+            horaFin: horaFinTexto || '19:00',
+            jugadores: jugadores ? Number(jugadores) : 2,
+            estado: 'Confirmada'
+        });
+
+        localStorage.setItem(RESERVAS_KEY, JSON.stringify(reservas));
+    </script>
+</body>
+</html>

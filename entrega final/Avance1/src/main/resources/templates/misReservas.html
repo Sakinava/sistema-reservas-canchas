@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PadelApp - Mis Reservas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #dbe7f5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding-top: 40px;
+            padding-bottom: 40px;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+
+        .app-title {
+            color: #1d4e89;
+            font-weight: 700;
+            font-size: 1.8rem;
+            margin-bottom: 0;
+        }
+
+        .app-subtitle {
+            color: #6c757d;
+            font-size: 0.85rem;
+            margin-bottom: 30px;
+        }
+
+        .reservas-card {
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 25px 30px;
+            width: 100%;
+            max-width: 340px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+        }
+
+        .reservas-card h5 {
+            color: #1d4e89;
+            font-weight: 600;
+            border-bottom: 1px solid #e9ecef;
+            padding-bottom: 12px;
+            margin-bottom: 15px;
+            font-size: 1.05rem;
+        }
+
+        .reserva-item {
+            background-color: #eef4fb;
+            border-radius: 8px;
+            padding: 12px 14px;
+            margin-bottom: 12px;
+        }
+
+        .reserva-numero {
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: #1d4e89;
+            margin-bottom: 4px;
+        }
+
+        .reserva-linea {
+            font-size: 0.75rem;
+            color: #333;
+            margin-bottom: 2px;
+        }
+
+        .reserva-estado {
+            margin-top: 6px;
+        }
+
+        .badge-confirmada {
+            background-color: #d1f2dd;
+            color: #1e7e42;
+            font-size: 0.68rem;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 12px;
+        }
+
+        .badge-proxima {
+            background-color: #fdf1cc;
+            color: #92720b;
+            font-size: 0.68rem;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 12px;
+        }
+
+        .badge-cancelada {
+            background-color: #fbdada;
+            color: #c0392b;
+            font-size: 0.68rem;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 12px;
+        }
+
+        .badge-completada {
+            background-color: #dfe3e8;
+            color: #495057;
+            font-size: 0.68rem;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 12px;
+        }
+
+        .sin-reservas {
+            font-size: 0.8rem;
+            color: #6c757d;
+            text-align: center;
+            padding: 15px 0;
+        }
+
+        .nota-simulada {
+            font-size: 0.68rem;
+            color: #9aa5b1;
+            text-align: center;
+            margin-top: 4px;
+            margin-bottom: 14px;
+        }
+
+        .btn-volver {
+            background-color: #e9ecef;
+            border: none;
+            color: #333;
+            font-weight: 600;
+            font-size: 0.82rem;
+            width: 100%;
+            padding: 9px 12px;
+            text-align: center;
+        }
+
+        .btn-volver:hover {
+            background-color: #dcdfe3;
+            color: #333;
+        }
+
+        .footer-note {
+            font-size: 0.7rem;
+            color: #9aa5b1;
+            margin-top: 15px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <h1 class="app-title">🎾 PadelApp</h1>
+    <p class="app-subtitle">Sistema de Reservas de Canchas de Pádel</p>
+
+    <div class="reservas-card">
+        <h5>Mis reservas</h5>
+
+        <div id="listaMisReservas"></div>
+
+        <p class="nota-simulada">* Datos simulados para el prototipo</p>
+
+        <a th:href="@{/menu}" href="menu.html" class="btn btn-volver">Volver al inicio</a>
+    </div>
+
+    <p class="footer-note">Prototipo académico – No hay base de datos ni backend real</p>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const RESERVAS_KEY = 'padelapp_reservas';
+        const USUARIO_ACTUAL = 'juan123'; // En una versión real vendría de la sesión del usuario logueado
+
+        // Datos de ejemplo (se usan solo si todavía no hay nada guardado en el navegador)
+        const reservasPorDefecto = [
+            { numero: '#RES-0038', usuario: 'juan123', cancha: 'Cancha 1', canchaCompleta: 'Cancha 1 – Techada', fecha: '12/06/2026', horaInicio: '18:00', horaFin: '19:00', jugadores: 2, estado: 'Confirmada' },
+            { numero: '#RES-0031', usuario: 'juan123', cancha: 'Cancha 3', canchaCompleta: 'Cancha 3 – Premium', fecha: '08/06/2025', horaInicio: '17:00', horaFin: '18:00', jugadores: 2, estado: 'Cancelada' },
+            { numero: '#RES-0025', usuario: 'juan123', cancha: 'Cancha 1', canchaCompleta: 'Cancha 1 – Techada', fecha: '01/06/2025', horaInicio: '19:00', horaFin: '20:00', jugadores: 4, estado: 'Completada' }
+        ];
+
+        function cargarReservas() {
+            const guardado = localStorage.getItem(RESERVAS_KEY);
+            if (!guardado) {
+                localStorage.setItem(RESERVAS_KEY, JSON.stringify(reservasPorDefecto));
+                return reservasPorDefecto;
+            }
+            return JSON.parse(guardado);
+        }
+
+        function claseBadge(estado) {
+            switch (estado) {
+                case 'Confirmada': return 'badge-confirmada';
+                case 'Próxima': return 'badge-proxima';
+                case 'Cancelada': return 'badge-cancelada';
+                case 'Completada': return 'badge-completada';
+                default: return 'badge-completada';
+            }
+        }
+
+        // Plantilla reutilizable para cada tarjeta de reserva
+        function crearTarjetaReserva(r) {
+            const nombreCancha = r.canchaCompleta || r.cancha;
+            const div = document.createElement('div');
+            div.className = 'reserva-item';
+            div.innerHTML = `
+                <p class="reserva-numero">N.°: ${r.numero}</p>
+                <p class="reserva-linea">📍 ${nombreCancha}</p>
+                <p class="reserva-linea">📅 Fecha: ${r.fecha} &nbsp; 🕒 Hora: ${r.horaInicio} - ${r.horaFin}</p>
+                <p class="reserva-linea">👥 Jugadores: ${r.jugadores}</p>
+                <p class="reserva-linea reserva-estado">Estado: <span class="${claseBadge(r.estado)}">${r.estado}</span></p>
+            `;
+            return div;
+        }
+
+        function renderMisReservas() {
+            const todasLasReservas = cargarReservas();
+            const misReservas = todasLasReservas.filter(r => r.usuario === USUARIO_ACTUAL);
+            const contenedor = document.getElementById('listaMisReservas');
+            contenedor.innerHTML = '';
+
+            if (misReservas.length === 0) {
+                contenedor.innerHTML = '<p class="sin-reservas">Todavía no tenés reservas registradas.</p>';
+                return;
+            }
+
+            misReservas.forEach(r => {
+                contenedor.appendChild(crearTarjetaReserva(r));
+            });
+        }
+
+        renderMisReservas();
+    </script>
+</body>
+</html>

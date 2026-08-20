@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PadelApp - Panel Administrador</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #dbe7f5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding-top: 40px;
+            padding-bottom: 40px;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+
+        .app-title {
+            color: #1d4e89;
+            font-weight: 700;
+            font-size: 1.8rem;
+            margin-bottom: 0;
+        }
+
+        .app-subtitle {
+            color: #6c757d;
+            font-size: 0.85rem;
+            margin-bottom: 30px;
+        }
+
+        .admin-card {
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 25px 30px;
+            width: 100%;
+            max-width: 480px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+        }
+
+        .admin-card h5.main-title {
+            color: #1d4e89;
+            font-weight: 600;
+            border-bottom: 1px solid #e9ecef;
+            padding-bottom: 12px;
+            margin-bottom: 18px;
+            font-size: 1.1rem;
+        }
+
+        .section-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #212529;
+            margin-bottom: 10px;
+            margin-top: 10px;
+        }
+
+        .cancha-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            padding: 8px 12px;
+            margin-bottom: 8px;
+        }
+
+        .cancha-row .cancha-nombre {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #212529;
+        }
+
+        .cancha-row .cancha-acciones {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .badge-disponible {
+            background-color: #d1f2dd;
+            color: #1e7e42;
+            font-size: 0.68rem;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 12px;
+        }
+
+        .badge-ocupada {
+            background-color: #fbdada;
+            color: #c0392b;
+            font-size: 0.68rem;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 12px;
+        }
+
+        .btn-editar {
+            background-color: #d9dcdf;
+            border: none;
+            color: #333;
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 4px 12px;
+        }
+
+        .btn-editar:hover {
+            background-color: #c7cbcf;
+            color: #333;
+        }
+
+        table.tabla-reservas {
+            font-size: 0.72rem;
+            width: 100%;
+        }
+
+        table.tabla-reservas thead {
+            background-color: #1d6fa8;
+            color: #fff;
+        }
+
+        table.tabla-reservas thead th {
+            font-weight: 600;
+            padding: 6px 8px;
+            border: none;
+        }
+
+        table.tabla-reservas tbody td {
+            padding: 6px 8px;
+            vertical-align: middle;
+            color: #333;
+        }
+
+        .badge-confirmada {
+            background-color: #d1f2dd;
+            color: #1e7e42;
+            font-size: 0.65rem;
+            font-weight: 600;
+            padding: 3px 8px;
+            border-radius: 10px;
+        }
+
+        .badge-cancelada {
+            background-color: #fbdada;
+            color: #c0392b;
+            font-size: 0.65rem;
+            font-weight: 600;
+            padding: 3px 8px;
+            border-radius: 10px;
+        }
+
+        .badge-completada {
+            background-color: #dfe3e8;
+            color: #495057;
+            font-size: 0.65rem;
+            font-weight: 600;
+            padding: 3px 8px;
+            border-radius: 10px;
+        }
+
+        .btn-editar-reserva {
+            background-color: #d9dcdf;
+            border: none;
+            color: #333;
+            font-size: 0.65rem;
+            font-weight: 600;
+            padding: 2px 8px;
+        }
+
+        .btn-editar-reserva:hover {
+            background-color: #c7cbcf;
+            color: #333;
+        }
+
+        .nota-simulada {
+            font-size: 0.68rem;
+            color: #9aa5b1;
+            margin-top: 8px;
+            margin-bottom: 15px;
+        }
+
+        .btn-volver {
+            background-color: #e9ecef;
+            border: none;
+            color: #333;
+            font-weight: 600;
+            font-size: 0.82rem;
+            width: 100%;
+            padding: 9px 12px;
+            text-align: center;
+        }
+
+        .btn-volver:hover {
+            background-color: #dcdfe3;
+            color: #333;
+        }
+
+        .footer-note {
+            font-size: 0.7rem;
+            color: #9aa5b1;
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .table-responsive-wrapper {
+            overflow-x: auto;
+            margin-bottom: 6px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1 class="app-title">🎾 PadelApp</h1>
+    <p class="app-subtitle">Sistema de Reservas de Canchas de Pádel</p>
+
+    <div class="admin-card">
+        <h5 class="main-title">Panel administrador</h5>
+
+        <p class="section-title">🗂️ Gestión de canchas</p>
+        <div id="listaCanchas"></div>
+
+        <p class="section-title">📋 Reservas registradas</p>
+        <div class="table-responsive-wrapper">
+            <table class="table tabla-reservas">
+                <thead>
+                    <tr>
+                        <th>N.°</th>
+                        <th>Usuario</th>
+                        <th>Cancha</th>
+                        <th>Fecha</th>
+                        <th>Estado</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="listaReservas"></tbody>
+            </table>
+        </div>
+        <p class="nota-simulada">* Datos simulados para el prototipo</p>
+
+        <a th:href="@{/menu}" href="menu.html" class="btn btn-volver">Volver al inicio</a>
+    </div>
+
+    <p class="footer-note">Prototipo académico – No hay base de datos ni backend real</p>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const CANCHAS_KEY = 'padelapp_canchas';
+        const RESERVAS_KEY = 'padelapp_reservas';
+
+        const canchasPorDefecto = [
+            { id: 1, nombre: 'Cancha 1 – Techada', estado: 'Disponible' },
+            { id: 2, nombre: 'Cancha 2 – Al aire libre', estado: 'Ocupada' },
+            { id: 3, nombre: 'Cancha 3 – Premium', estado: 'Disponible' },
+            { id: 4, nombre: 'Cancha 4 – Lateral', estado: 'Ocupada' }
+        ];
+
+        const reservasPorDefecto = [
+            { numero: '#0042', usuario: 'juan123', cancha: 'Cancha 1', canchaCompleta: 'Cancha 1 – Techada', fecha: '12/06/2026', horaInicio: '18:00', horaFin: '19:00', jugadores: 2, estado: 'Confirmada' },
+            { numero: '#0041', usuario: 'maria99', cancha: 'Cancha 1', canchaCompleta: 'Cancha 1 – Techada', fecha: '18/06/2026', horaInicio: '10:00', horaFin: '11:00', jugadores: 4, estado: 'Confirmada' },
+            { numero: '#0040', usuario: 'carlos_p', cancha: 'Cancha 2', canchaCompleta: 'Cancha 2 – Al aire libre', fecha: '17/06/2026', horaInicio: '09:00', horaFin: '10:00', jugadores: 2, estado: 'Cancelada' },
+            { numero: '#0038', usuario: 'lopez205', cancha: 'Cancha 4', canchaCompleta: 'Cancha 4 – Lateral', fecha: '17/06/2026', horaInicio: '15:00', horaFin: '16:00', jugadores: 4, estado: 'Completada' },
+            { numero: '#0036', usuario: 'juan123', cancha: 'Cancha 1', canchaCompleta: 'Cancha 1 – Techada', fecha: '15/06/2026', horaInicio: '19:00', horaFin: '20:00', jugadores: 2, estado: 'Confirmada' }
+        ];
+
+        function cargarCanchas() {
+            const guardado = localStorage.getItem(CANCHAS_KEY);
+            if (!guardado) {
+                localStorage.setItem(CANCHAS_KEY, JSON.stringify(canchasPorDefecto));
+                return canchasPorDefecto;
+            }
+            return JSON.parse(guardado);
+        }
+
+        function guardarCanchas(canchas) {
+            localStorage.setItem(CANCHAS_KEY, JSON.stringify(canchas));
+        }
+
+        function cargarReservas() {
+            const guardado = localStorage.getItem(RESERVAS_KEY);
+            if (!guardado) {
+                localStorage.setItem(RESERVAS_KEY, JSON.stringify(reservasPorDefecto));
+                return reservasPorDefecto;
+            }
+            return JSON.parse(guardado);
+        }
+
+        function guardarReservas(reservas) {
+            localStorage.setItem(RESERVAS_KEY, JSON.stringify(reservas));
+        }
+
+        function renderCanchas() {
+            const canchas = cargarCanchas();
+            const contenedor = document.getElementById('listaCanchas');
+            contenedor.innerHTML = '';
+
+            canchas.forEach(c => {
+                const badgeClase = c.estado === 'Disponible' ? 'badge-disponible' : 'badge-ocupada';
+                const fila = document.createElement('div');
+                fila.className = 'cancha-row';
+                fila.innerHTML = `
+                    <span class="cancha-nombre">${c.nombre}</span>
+                    <span class="cancha-acciones">
+                        <span class="${badgeClase}">${c.estado}</span>
+                        <button type="button" class="btn btn-editar" onclick="editarCancha(${c.id})">Editar</button>
+                    </span>
+                `;
+                contenedor.appendChild(fila);
+            });
+        }
+
+        function editarCancha(id) {
+            const canchas = cargarCanchas();
+            const cancha = canchas.find(c => c.id === id);
+            if (!cancha) return;
+            cancha.estado = cancha.estado === 'Disponible' ? 'Ocupada' : 'Disponible';
+            guardarCanchas(canchas);
+            renderCanchas();
+        }
+
+        function badgeReserva(estado) {
+            if (estado === 'Confirmada') return 'badge-confirmada';
+            if (estado === 'Cancelada') return 'badge-cancelada';
+            return 'badge-completada';
+        }
+
+        function renderReservas() {
+            const reservas = cargarReservas();
+            const cuerpo = document.getElementById('listaReservas');
+            cuerpo.innerHTML = '';
+
+            reservas.forEach((r, index) => {
+                const fila = document.createElement('tr');
+                fila.innerHTML = `
+                    <td>${r.numero}</td>
+                    <td>${r.usuario}</td>
+                    <td>${r.cancha}</td>
+                    <td>${r.fecha}</td>
+                    <td><span class="${badgeReserva(r.estado)}">${r.estado}</span></td>
+                    <td><button type="button" class="btn btn-editar-reserva" onclick="editarReserva(${index})">Editar</button></td>
+                `;
+                cuerpo.appendChild(fila);
+            });
+        }
+
+        function editarReserva(index) {
+            const reservas = cargarReservas();
+            const estados = ['Confirmada', 'Cancelada', 'Completada'];
+            const actual = estados.indexOf(reservas[index].estado);
+            reservas[index].estado = estados[(actual + 1) % estados.length];
+            guardarReservas(reservas);
+            renderReservas();
+        }
+
+        renderCanchas();
+        renderReservas();
+    </script>
+</body>
+</html>
