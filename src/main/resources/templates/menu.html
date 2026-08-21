@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="#{menu.tituloPagina}">PadelApp - Menú principal</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #dbe7f5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding-top: 40px;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+
+        .app-title {
+            color: #1d4e89;
+            font-weight: 700;
+            font-size: 1.8rem;
+            margin-bottom: 0;
+        }
+
+        .app-subtitle {
+            color: #6c757d;
+            font-size: 0.85rem;
+            margin-bottom: 30px;
+        }
+
+        .menu-card {
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 25px 30px;
+            width: 100%;
+            max-width: 270px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+        }
+
+        .menu-card h5 {
+            color: #1d4e89;
+            font-weight: 600;
+            border-bottom: 1px solid #e9ecef;
+            padding-bottom: 12px;
+            margin-bottom: 15px;
+            font-size: 1.05rem;
+        }
+
+        .welcome-text {
+            font-size: 0.78rem;
+            color: #495057;
+            margin-bottom: 15px;
+        }
+
+        .btn-menu {
+            background-color: #1d6fa8;
+            border: none;
+            color: #fff;
+            font-weight: 500;
+            font-size: 0.82rem;
+            width: 100%;
+            padding: 9px 12px;
+            margin-bottom: 10px;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-menu:hover {
+            background-color: #175a87;
+            color: #fff;
+        }
+
+        .btn-logout {
+            background-color: #e9ecef;
+            border: none;
+            color: #333;
+            font-weight: 600;
+            font-size: 0.82rem;
+            width: 100%;
+            padding: 9px 12px;
+            text-align: center;
+        }
+
+        .btn-logout:hover {
+            background-color: #dcdfe3;
+            color: #333;
+        }
+
+        .footer-note {
+            font-size: 0.7rem;
+            color: #9aa5b1;
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .language-selector {
+            position: fixed;
+            top: 12px;
+            right: 15px;
+            font-size: 0.72rem;
+            color: #9aa5b1;
+        }
+
+        .language-selector a {
+            color: #1d6fa8;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .language-selector a:hover {
+            text-decoration: underline;
+        }
+
+        .language-selector span {
+            margin: 0 4px;
+            color: #c2cad3;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="language-selector">
+        <a th:href="@{/menu(lang=es)}">ES</a>
+        <span>|</span>
+        <a th:href="@{/menu(lang=en)}">EN</a>
+    </div>
+
+    <h1 class="app-title" th:text="#{app.nombre}">🎾 PadelApp</h1>
+    <p class="app-subtitle" th:text="#{app.subtitulo}">Sistema de Reservas de Canchas de Pádel</p>
+
+    <div class="menu-card">
+        <h5 th:text="#{menu.titulo}">Menú principal</h5>
+
+        <p class="welcome-text"
+           th:with="rol=${session.rol == 'ADMIN'} ? #{menu.administrador} : #{menu.cliente}"
+           th:text="#{menu.bienvenida(${rol})}">Bienvenido, Cliente. ¿Qué deseas hacer?</p>
+
+        <a th:href="@{/canchasDisponibles}" href="canchasDisponibles.html" class="btn btn-menu" th:text="#{menu.canchas}">
+            🎾 Ver canchas disponibles
+        </a>
+
+        <a th:href="@{/misReservas}" href="misReservas.html" class="btn btn-menu" th:text="#{menu.reservas}">
+            🗓️ Mis reservas
+        </a>
+
+        <a th:if="${session.rol == 'ADMIN'}" th:href="@{/panelAdministrativo}" href="panelAdministrativo.html" class="btn btn-menu" th:text="#{menu.panel}">
+            🔧 Panel administrador
+        </a>
+
+        <a th:href="@{/logout}" href="login.html" class="btn btn-logout" th:text="#{menu.logout}">
+            Cerrar sesión
+        </a>
+    </div>
+
+    <p class="footer-note" th:text="#{footer.texto}">Prototipo académico – No hay base de datos ni backend real</p>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
